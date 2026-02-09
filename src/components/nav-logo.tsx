@@ -23,7 +23,7 @@ export function SidebarLogo() {
 
             {/* Name (only when expanded) */}
             {state === "expanded" && (
-                <span className="text-sm font-semibold tracking-tight">
+                <span className="text-2xl font-semibold tracking-tight">
                     Inspectra
                 </span>
             )}
