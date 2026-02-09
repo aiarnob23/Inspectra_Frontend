@@ -4,6 +4,7 @@ import { useNavigate, useSearchParams } from "react-router";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 
 
+
 interface ModalProps {
     modalId: string;
     openId: string;

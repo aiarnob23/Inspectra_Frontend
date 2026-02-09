@@ -4,6 +4,7 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ui/theme/mode-toggle";
+import OpenModal from "@/components/Modal/openModal";
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,7 +15,7 @@ const Navbar = () => {
 
     const navLinks = [
         { name: "How It Works", path: "/main/rent" },
-        { name: "Pricing", path: "/main/pricing"},
+        { name: "Pricing", path: "/main/pricing" },
         { name: "Testimonials", path: "/main/find-service/Home Shifter" },
         { name: "FAQ", path: "/main/find-service/Plumber" },
     ];
@@ -94,8 +95,21 @@ const Navbar = () => {
                         {/* Desktop Button */}
                         <div className="hidden space-x-2 lg:block">
                             <Button variant='outline'>Login</Button>
-                            <Button>Sign Up</Button>
-                            <ModeToggle/>
+                            <OpenModal
+                                modals={[
+                                    {
+                                        modalId: "modal",
+                                        openId: "register-user",
+                                    },
+                                ]}
+                            >
+                                <Button
+                                    className="cursor-pointer active:scale-98"
+                                >
+                                    Sign Up
+                                </Button>
+                            </OpenModal>
+                            <ModeToggle />
                         </div>
 
                         {/* Mobile menu button */}

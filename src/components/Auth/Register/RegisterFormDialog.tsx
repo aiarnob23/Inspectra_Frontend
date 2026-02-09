@@ -3,8 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 import { toast } from "sonner"
-
-
+import { X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -21,65 +20,84 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { clientSchema, type ClientFormValues } from "@/lib/schemas/clientSchema"
-import { createClient } from "@/services/clientService"
 
-export function AddClientForm() {
-  const form = useForm<ClientFormValues>({
-    resolver: zodResolver(clientSchema),
+import useModal from "@/components/Modal/useModal"
+import {
+  registerSchema,
+  type RegisterFormValues,
+} from "@/lib/schemas/userSchema";
+
+export default function RegisterFormDialog() {
+  const { close } = useModal()
+
+  const form = useForm<RegisterFormValues>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
-      name: "",
+      firstName: "",
+      lastName: "",
       email: "",
-      phone: "",
-      company: "",
-      status: "active",
+      password: "",
+      confirmPassword: "",
     },
   })
 
-  async function onSubmit(values: ClientFormValues) {
+  async function onSubmit(values: RegisterFormValues) {
     try {
-      await createClient(values)
+      console.log(values)
+      // await registerUser(values)
 
-      toast.success("Client created successfully")
+      toast.success("Account created successfully")
       form.reset()
+      close(["modal"])
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Something went wrong"
-      )
+      toast.error("Something went wrong")
     }
   }
 
   return (
-    <Card className="max-w-lg">
-      <CardHeader>
-        <CardTitle>Add New Client</CardTitle>
+    <Card className="w-full max-w-lg bg-background">
+      <CardHeader className="flex flex-row items-center justify-between">
+        <CardTitle>Create Account</CardTitle>
+
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => close(["modal"])}
+        >
+          <X />
+        </Button>
       </CardHeader>
 
       <CardContent>
         <form
-          id="client-form"
+          id="register-form"
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-6"
         >
           <FieldGroup>
-            {/* Name */}
+            {/* First Name */}
             <Controller
-              name="name"
+              name="firstName"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Name</FieldLabel>
-                  <Input {...field} aria-invalid={fieldState.invalid} />
+                  <FieldLabel>First Name</FieldLabel>
+                  <Input {...field} />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}
+                </Field>
+              )}
+            />
+
+            {/* Last Name */}
+            <Controller
+              name="lastName"
+              control={form.control}
+              render={({ field }) => (
+                <Field>
+                  <FieldLabel>Last Name</FieldLabel>
+                  <Input {...field} />
                 </Field>
               )}
             />
@@ -91,11 +109,7 @@ export function AddClientForm() {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel>Email</FieldLabel>
-                  <Input
-                    {...field}
-                    type="email"
-                    aria-invalid={fieldState.invalid}
-                  />
+                  <Input type="email" {...field} />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}
@@ -103,14 +117,14 @@ export function AddClientForm() {
               )}
             />
 
-            {/* Phone */}
+            {/* Password */}
             <Controller
-              name="phone"
+              name="password"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Phone</FieldLabel>
-                  <Input {...field} aria-invalid={fieldState.invalid} />
+                  <FieldLabel>Password</FieldLabel>
+                  <Input type="password" {...field} />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}
@@ -118,40 +132,14 @@ export function AddClientForm() {
               )}
             />
 
-            {/* Company */}
+            {/* Confirm Password */}
             <Controller
-              name="company"
+              name="confirmPassword"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Company</FieldLabel>
-                  <Input {...field} aria-invalid={fieldState.invalid} />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-
-            {/* Status */}
-            <Controller
-              name="status"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Status</FieldLabel>
-                  <Select
-                    value={field.value}
-                    onValueChange={field.onChange}
-                  >
-                    <SelectTrigger aria-invalid={fieldState.invalid}>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="active">Active</SelectItem>
-                      <SelectItem value="inactive">Inactive</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <FieldLabel>Confirm Password</FieldLabel>
+                  <Input type="password" {...field} />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}
@@ -170,8 +158,9 @@ export function AddClientForm() {
         >
           Reset
         </Button>
-        <Button type="submit" form="client-form">
-          Save Client
+
+        <Button type="submit" form="register-form">
+          Register
         </Button>
       </CardFooter>
     </Card>

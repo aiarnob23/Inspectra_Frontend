@@ -1,5 +1,6 @@
 import Banner from "@/components/Common/Home/Banner";
 import Features from "@/components/Common/Home/Features";
+import Modals from "@/components/Modal";
 
 
 export default function Home() {
@@ -7,6 +8,7 @@ export default function Home() {
     <>
       <Banner />
       <Features/>
+      <Modals/>
     </>
   )
 }
