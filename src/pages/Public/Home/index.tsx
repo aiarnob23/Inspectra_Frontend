@@ -1,14 +1,12 @@
 import Banner from "@/components/Common/Home/Banner";
-import { Button } from "@/components/ui/button";
-import { ModeToggle } from "@/components/ui/theme/mode-toggle";
+import Features from "@/components/Common/Home/Features";
+
 
 export default function Home() {
   return (
     <>
-    <Banner/>
-      <div>Home page</div>
-      <Button className="text-foreground">Button</Button>
-      <ModeToggle/>
-      </>
+      <Banner />
+      <Features/>
+    </>
   )
 }
