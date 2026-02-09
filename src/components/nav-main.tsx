@@ -39,7 +39,7 @@ export function NavMain({
                 isActive={location.pathname === item.url}
               >
                 <a href={item.url}>
-                  <item.icon />
+                  <item.icon className="ml-1 text-muted-foreground"/>
                   <span className="text-lg font-medium text-muted-foreground">{item.title}</span>
                 </a>
               </SidebarMenuButton>

@@ -1,5 +1,6 @@
 import DashboardLayout from "@/layouts/DashboardLayout";
 import RootLayout from "@/layouts/RootLayout";
+import Clients from "@/pages/Dashboard/Clients";
 import Home from "@/pages/Public/Home";
 import { createBrowserRouter } from "react-router";
 
@@ -20,7 +21,13 @@ const router = createBrowserRouter([
     },
     {
         path:"/dashboard",
-        element:<DashboardLayout/>
+        element:<DashboardLayout/>,
+        children:[
+            {
+                path:"/dashboard/clients",
+                element:<Clients/>,
+            }
+        ]
     }
         
     
