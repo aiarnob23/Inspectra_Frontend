@@ -33,14 +33,13 @@ import useModal from "@/components/Modal/useModal"
 import { authService } from "@/services/authService"
 import { getApiErrorMessage } from "@/lib/api-error"
 import { otpSchema, type OTPFormValues } from "@/lib/schemas/authSchema"
+import { useAppSelector } from "@/store/hooks"
 
 export default function OTPVerifyDialog() {
   const { close } = useModal()
 
-  const email =
-    typeof window !== "undefined"
-      ? new URLSearchParams(window.location.search).get("email")
-      : null
+  const email = useAppSelector((s) => s.authFlow.pendingEmail);
+  console.log(email)
 
   const form = useForm<OTPFormValues>({
     resolver: zodResolver(otpSchema),

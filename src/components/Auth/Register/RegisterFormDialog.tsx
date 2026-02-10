@@ -30,9 +30,14 @@ import { PasswordInput } from "@/components/ui/password-input"
 import { authService } from "@/services/authService"
 import axios from "axios"
 import { getApiErrorMessage } from "@/lib/api-error"
+import { useAppDispatch } from "@/store/hooks"
+import { setPendingEmail } from "@/store/slices/authFlowSlice"
+import { useNavigate } from "react-router"
 
 export default function RegisterFormDialog() {
   const { close } = useModal()
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
@@ -58,11 +63,13 @@ export default function RegisterFormDialog() {
         phoneNumber: values.phone
       })
 
-      toast.success("Account created successfully")
-      console.log(res)
-
-      form.reset()
-      close(["modal"])
+      if(res?.success){
+        toast.success("Account created successfully")
+        dispatch(setPendingEmail(values.email))
+        form.reset()
+        close(["modal"])
+        navigate("/?modal=verify-otp" , {replace:true})
+      }
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.log(error.response)
