@@ -94,7 +94,16 @@ const Navbar = () => {
 
                         {/* Desktop Button */}
                         <div className="hidden space-x-2 lg:block">
-                            <Button variant='outline'>Login</Button>
+                            <OpenModal
+                                modals={[
+                                    {
+                                        modalId: "modal",
+                                        openId: "login-user",
+                                    },
+                                ]}
+                            >
+                                <Button variant='outline'>Login</Button>
+                            </OpenModal>
                             <OpenModal
                                 modals={[
                                     {

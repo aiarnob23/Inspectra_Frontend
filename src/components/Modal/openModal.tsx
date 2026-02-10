@@ -1,26 +1,22 @@
-import { Button } from "../ui/button";
+import React from "react";
 import useModal from "./useModal";
 
-export default function OpenModal({
-    modals,
-    children,
-    ...props
-}: {
-    children: React.ReactNode;
-    modals: {
-        modalId: string;
-        openId: string;
-    }[];
-}) {
-    const { open } = useModal();
+type OpenModalProps = {
+  children: React.ReactElement<{ onClick?: React.MouseEventHandler }>;
+  modals: {
+    modalId: string;
+    openId: string;
+  }[];
+};
 
-    const handleOpen = () => {
-        open(modals);
-    };
+export default function OpenModal({ modals, children }: OpenModalProps) {
+  const { open } = useModal();
 
-    return (
-        <Button onClick={handleOpen} {...props}>
-            {children}
-        </Button>
-    )
+  const handleOpen = () => {
+    open(modals);
+  };
+
+  return React.cloneElement(children, {
+    onClick: handleOpen,
+  });
 }

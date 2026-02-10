@@ -4,38 +4,40 @@ import Clients from "@/pages/Dashboard/Clients";
 import NotFound from "@/pages/NotFoundPage";
 import Home from "@/pages/Public/Home";
 import { createBrowserRouter } from "react-router";
+import ProtectedRoute from "./ProtectedRoute";
+
 
 
 const router = createBrowserRouter([
     {
-        path:"/",
-        element:<Home/>
+        path: "/",
+        element: <Home />
     },
     {
-        path:"/main",
-        element:<RootLayout/>,
-        children:[
+        path: "/main",
+        element: <RootLayout />,
+        children: [
             {
-            
-        }
-    ]
-    },
-    {
-        path:"/dashboard",
-        element:<DashboardLayout/>,
-        children:[
-            {
-                path:"/dashboard/clients",
-                element:<Clients/>,
+
             }
         ]
     },
     {
-        path:"*",
-        element:<NotFound/>
+        path: "/dashboard",
+        element: <ProtectedRoute><DashboardLayout/></ProtectedRoute>,
+        children: [
+            {
+                path: "/dashboard/clients",
+                element: <Clients />,
+            }
+        ]
+    },
+    {
+        path: "*",
+        element: <NotFound />
     }
-        
-    
+
+
 ])
 
 export default router;

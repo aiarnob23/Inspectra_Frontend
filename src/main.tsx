@@ -6,12 +6,14 @@ import {Provider} from 'react-redux'
 import router from './routes/index.tsx'
 import { ThemeProvider } from './theme/theme-provider.tsx'
 import { Toaster } from 'sonner'
-import { store } from './store/index.ts'
+import { persistor, store } from './store/index.ts'
+import { PersistGate } from 'redux-persist/integration/react'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={store}>
-      <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
+      <PersistGate loading={null} persistor={persistor}>
+        <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
       <Toaster
         position="top-right"
         className="z-9999"
@@ -19,6 +21,7 @@ createRoot(document.getElementById('root')!).render(
       />
       <RouterProvider router={router} />
     </ThemeProvider>
+      </PersistGate>
     </Provider>
   </StrictMode>
 )
