@@ -1,6 +1,7 @@
 import DashboardLayout from "@/layouts/DashboardLayout";
 import RootLayout from "@/layouts/RootLayout";
 import Clients from "@/pages/Dashboard/Clients";
+import NotFound from "@/pages/NotFoundPage";
 import Home from "@/pages/Public/Home";
 import { createBrowserRouter } from "react-router";
 
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
                 element:<Clients/>,
             }
         ]
+    },
+    {
+        path:"*",
+        element:<NotFound/>
     }
         
     

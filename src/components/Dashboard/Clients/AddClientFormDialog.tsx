@@ -47,9 +47,9 @@ export function AddClientFormDialog() {
     try {
       console.log(values)
       // await createClient(values)
-
       toast.success("Client created successfully")
       form.reset()
+      close(["modal"])
     } catch (error) {
       toast.error(
         error instanceof Error ? error.message : "Something went wrong"

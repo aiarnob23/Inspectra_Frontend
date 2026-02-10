@@ -1,4 +1,5 @@
 
+import OTPInputDigalog from "../Auth/OTP/OTPVerifyDialog";
 import RegisterFormDialog from "../Auth/Register/RegisterFormDialog";
 import { AddClientFormDialog } from "../Dashboard/Clients/AddClientFormDialog";
 import Modal from "./modal";
@@ -20,6 +21,14 @@ export default function Modals() {
                 closeModals={["tab"]}
                 className="sm:w-[45dvw]">
                 <RegisterFormDialog />
+            </Modal>
+            <Modal
+                modalId="modal"
+                openId="verify-otp"
+                closeModals={["tab"]}
+                className="sm:w-[45dvw]"
+            >
+                <OTPInputDigalog />
             </Modal>
         </>
     )
