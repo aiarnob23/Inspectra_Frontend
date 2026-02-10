@@ -53,7 +53,7 @@ export const authService = {
   // -------------------------
   // Verify Email (OTP)
   // -------------------------
-  verifyEmail: async (data: { email: string; code: number }): Promise<AuthResponse> => {
+  verifyEmail: async (data: { email: string; code: string }): Promise<AuthResponse> => {
     const res = await api.post("/auth/verify-email", data)
     return res.data.data
   },

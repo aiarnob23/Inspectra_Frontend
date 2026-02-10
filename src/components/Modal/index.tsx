@@ -1,5 +1,6 @@
 
-import OTPInputDigalog from "../Auth/OTP/OTPVerifyDialog";
+import LoginFormDialog from "../Auth/Login/LoginFormDialog";
+import OTPInputDigalog from "../Auth/OTP/EmailOTPVerifyDialog";
 import RegisterFormDialog from "../Auth/Register/RegisterFormDialog";
 import { AddClientFormDialog } from "../Dashboard/Clients/AddClientFormDialog";
 import Modal from "./modal";
@@ -29,6 +30,14 @@ export default function Modals() {
                 className="sm:w-[45dvw]"
             >
                 <OTPInputDigalog />
+            </Modal>
+             <Modal
+                modalId="modal"
+                openId="login-user"
+                closeModals={["tab"]}
+                className="sm:w-[45dvw]"
+            >
+                <LoginFormDialog />
             </Modal>
         </>
     )

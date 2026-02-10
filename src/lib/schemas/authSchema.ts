@@ -25,7 +25,6 @@ export const registerSchema = z.object({
 )
 
 //otp 
-
 export const otpSchema = z.object({
   code: z
     .string()
@@ -33,5 +32,17 @@ export const otpSchema = z.object({
     .regex(/^\d+$/, "OTP must contain only numbers"),
 })
 
+//Login user
+export const loginSchema = z.object({
+  email: z
+    .string()
+    .email("Invalid email address"),
+  password: z
+    .string()
+    .min(1, "Password is required"),
+})
+
+
 export type RegisterFormValues = z.infer<typeof registerSchema>
 export type OTPFormValues = z.infer<typeof otpSchema>
+export type LoginFormValues = z.infer<typeof loginSchema>

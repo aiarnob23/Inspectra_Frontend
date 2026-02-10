@@ -34,18 +34,25 @@ import { authService } from "@/services/authService"
 import { getApiErrorMessage } from "@/lib/api-error"
 import { otpSchema, type OTPFormValues } from "@/lib/schemas/authSchema"
 import { useAppSelector } from "@/store/hooks"
+import { useDispatch } from "react-redux"
+import { setUser } from "@/store/slices/authSlice"
+import { useNavigate } from "react-router"
 
 export default function OTPVerifyDialog() {
   const { close } = useModal()
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const email = useAppSelector((s) => s.authFlow.pendingEmail);
-  console.log(email)
 
+  // React Hook Form setup with Zod validation
   const form = useForm<OTPFormValues>({
     resolver: zodResolver(otpSchema),
     defaultValues: { code: "" },
   })
-
+  /**
+   * Handles OTP submission and email verification
+   */
   async function onSubmit(values: OTPFormValues) {
     if (!email) {
       toast.error("Email not found. Please register again.")
@@ -53,14 +60,27 @@ export default function OTPVerifyDialog() {
     }
 
     try {
-      await authService.verifyEmail({
-        email,
-        code: Number(values.code),
-      })
+      // Verify OTP with backend
 
+      const res = await authService.verifyEmail({
+        email,
+        code: values.code,
+      })
+      //Set USER
+      dispatch(
+        setUser({
+          id: res.user.id,
+          email: res.user.email,
+          firstName: res.user.firstName ?? "",
+          lastName: res.user.lastName ?? "",
+          role: res.user.role,
+          status: res.user.status
+        })
+      )
       toast.success("Email verified successfully 🎉")
       form.reset()
       close(["modal"])
+      navigate("/dashboard/overview", { replace: true })
     } catch (error) {
       const message = getApiErrorMessage(error)
 
