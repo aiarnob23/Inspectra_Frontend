@@ -1,6 +1,10 @@
 import { createApi } from "@reduxjs/toolkit/query/react"
 import { axiosBaseQuery } from "@/lib/axiosBaseQuery"
 
+/* ================================
+   Types
+================================ */
+
 export interface Asset {
   id: string
   name: string
@@ -9,7 +13,13 @@ export interface Asset {
   serialNumber?: string | null
   description?: string | null
   location: string
-  clientId: string
+
+  client: {
+    id: string
+    name: string
+    company?: string | null
+  }
+
   subscriberId: string
   createdAt: string
   updatedAt: string
@@ -31,44 +41,86 @@ export interface PaginationQuery {
   search?: string
 }
 
+export interface PaginatedAssetsResponse {
+  data: Asset[]
+  meta:{
+    pagination:{
+      total:number
+      page:number
+      limit:number
+      totalPages:number
+      hasNext:boolean
+      hasPrevious:boolean
+    }
+  }
+}
+
+/* ================================
+   API
+================================ */
+
 export const assetApi = createApi({
   reducerPath: "assetApi",
   baseQuery: axiosBaseQuery(),
   tagTypes: ["Assets"],
   endpoints: (builder) => ({
-    // GET ALL
-    getAssets: builder.query<Asset[], PaginationQuery | void>({
+
+    /* ======================
+       GET ASSETS (Paginated)
+    =======================*/
+    getAssets: builder.query<
+      PaginatedAssetsResponse,
+      PaginationQuery
+    >({
       query: (params) => ({
         url: "/assets",
         method: "GET",
         params,
       }),
-      transformResponse: (res: any) => res.data,
-      providesTags: ["Assets"],
+
+      // ✅ granular tagging (professional)
+      providesTags: (result) =>
+        result
+          ? [
+            ...result.data.map(({ id }) => ({
+              type: "Assets" as const,
+              id,
+            })),
+            { type: "Assets", id: "LIST" },
+          ]
+          : [{ type: "Assets", id: "LIST" }],
     }),
 
-    // GET BY ID
+    /* ======================
+       GET SINGLE ASSET
+    =======================*/
     getAssetById: builder.query<Asset, string>({
       query: (id) => ({
         url: `/assets/${id}`,
         method: "GET",
       }),
-      transformResponse: (res: any) => res.data,
-      providesTags: ["Assets"],
+      providesTags: (_result, _error, id) => [
+        { type: "Assets", id },
+      ],
     }),
 
-    // CREATE
+    /* ======================
+       CREATE ASSET
+    =======================*/
     createAsset: builder.mutation<Asset, CreateAssetPayload>({
       query: (body) => ({
         url: "/assets",
         method: "POST",
         data: body,
       }),
-      transformResponse: (res: any) => res.data,
-      invalidatesTags: ["Assets"],
+
+      // Only invalidate list
+      invalidatesTags: [{ type: "Assets", id: "LIST" }],
     }),
 
-    // UPDATE
+    /* ======================
+       UPDATE ASSET
+    =======================*/
     updateAsset: builder.mutation<
       Asset,
       { id: string; data: Partial<CreateAssetPayload> }
@@ -78,17 +130,26 @@ export const assetApi = createApi({
         method: "PATCH",
         data,
       }),
-      transformResponse: (res: any) => res.data,
-      invalidatesTags: ["Assets"],
+
+      invalidatesTags: (_result, _error, { id }) => [
+        { type: "Assets", id },
+        { type: "Assets", id: "LIST" },
+      ],
     }),
 
-    // DELETE
+    /* ======================
+       DELETE ASSET
+    =======================*/
     deleteAsset: builder.mutation<void, string>({
       query: (id) => ({
         url: `/assets/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Assets"],
+
+      invalidatesTags: (_result, _error, id) => [
+        { type: "Assets", id },
+        { type: "Assets", id: "LIST" },
+      ],
     }),
   }),
 })

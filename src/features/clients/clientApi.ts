@@ -36,10 +36,14 @@ export interface ClientListQuery {
 export interface PaginatedClientsResponse {
   data: Client[]
   meta: {
-    page: number
-    limit: number
-    total: number
-    totalPage: number
+    pagination: {
+      total: number
+      page: number
+      limit: number
+      totalPages: number
+      hasNext: boolean
+      hasPrevious: boolean
+    }
   }
 }
 

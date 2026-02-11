@@ -1,5 +1,6 @@
+"use client"
+
 import {
-    useGetAssetsQuery,
     useDeleteAssetMutation,
 } from "@/features/asset/assetApi"
 
@@ -21,32 +22,33 @@ import {
 
 import { Button } from "@/components/ui/button"
 import { MoreHorizontalIcon } from "lucide-react"
+import { useState } from "react"
+import type { Asset } from "@/features/asset/assetApi"
 
-import { useGetClientsQuery } from "@/features/clients/clientApi"
+interface Props {
+    assets: Asset[]
+    isLoading: boolean
+    isError: boolean
+}
 
-export default function AssetsTable() {
-    const { data: assets = [], isLoading, isError } = useGetAssetsQuery()
-    const { data } = useGetClientsQuery({
-        page: 1,
-        limit: 100, 
-    })
+export default function AssetsTable({
+    assets,
+    isLoading,
+    isError,
+}: Props) {
 
-    const clients = data?.data ?? []
-
-    const [deleteAsset, { isLoading: isDeleting }] =
-        useDeleteAssetMutation()
+    const [deleteAsset] = useDeleteAssetMutation()
+    const [deletingId, setDeletingId] = useState<string | null>(null)
 
     const handleDelete = async (id: string) => {
         try {
+            setDeletingId(id)
             await deleteAsset(id).unwrap()
         } catch (error) {
             console.error("Delete failed", error)
+        } finally {
+            setDeletingId(null)
         }
-    }
-
-    const getClientName = (clientId: string) => {
-        const client = clients.find((c) => c.id === clientId)
-        return client ? client.name : "-"
     }
 
     return (
@@ -55,6 +57,7 @@ export default function AssetsTable() {
                 <TableRow>
                     <TableHead>Name</TableHead>
                     <TableHead>Client</TableHead>
+                    <TableHead>Company</TableHead>
                     <TableHead>Type</TableHead>
                     <TableHead>Model</TableHead>
                     <TableHead>Location</TableHead>
@@ -65,43 +68,39 @@ export default function AssetsTable() {
             </TableHeader>
 
             <TableBody>
-                {/* Loading */}
                 {isLoading && (
                     <TableRow>
-                        <TableCell colSpan={4} className="text-center py-6">
+                        <TableCell colSpan={7} className="text-center py-6">
                             Loading...
                         </TableCell>
                     </TableRow>
                 )}
 
-                {/* Error */}
                 {isError && (
                     <TableRow>
-                        <TableCell colSpan={4} className="text-center py-6 text-red-500">
+                        <TableCell colSpan={7} className="text-center py-6 text-red-500">
                             Failed to load assets
                         </TableCell>
                     </TableRow>
                 )}
 
-                {/* Empty */}
                 {!isLoading && assets.length === 0 && (
                     <TableRow>
-                        <TableCell colSpan={4} className="text-center py-6">
+                        <TableCell colSpan={7} className="text-center py-6">
                             No assets found
                         </TableCell>
                     </TableRow>
                 )}
 
-                {/* Data */}
                 {assets.map((asset) => (
                     <TableRow key={asset.id}>
                         <TableCell>{asset.name}</TableCell>
-                        <TableCell>
-                            {getClientName(asset.clientId)}
-                        </TableCell>
+                        <TableCell>{asset.client?.name ?? "-"}</TableCell>
+                        <TableCell>{asset.client?.company ?? "-"}</TableCell>
                         <TableCell>{asset.type}</TableCell>
                         <TableCell>{asset.model}</TableCell>
                         <TableCell>{asset.location}</TableCell>
+
                         <TableCell className="text-right">
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
@@ -113,9 +112,9 @@ export default function AssetsTable() {
                                 <DropdownMenuContent align="end">
                                     <DropdownMenuItem
                                         onClick={() => handleDelete(asset.id)}
-                                        disabled={isDeleting}
+                                        disabled={deletingId === asset.id}
                                     >
-                                        Delete
+                                        {deletingId === asset.id ? "Deleting..." : "Delete"}
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>

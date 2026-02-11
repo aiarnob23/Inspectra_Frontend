@@ -8,6 +8,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
+import { Link } from "react-router"
 
 export function NavMain({
   items,
@@ -38,10 +39,10 @@ export function NavMain({
                 tooltip={item.title}
                 isActive={location.pathname === item.url}
               >
-                <a href={item.url}>
+                <Link to={item.url}>
                   <item.icon className="ml-1 text-muted-foreground"/>
                   <span className="text-lg font-medium text-muted-foreground">{item.title}</span>
-                </a>
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           )

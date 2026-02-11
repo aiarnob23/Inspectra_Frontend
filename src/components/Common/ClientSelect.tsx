@@ -24,7 +24,7 @@ export default function ClientSelect({ value, onChange }: Props) {
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(search)
-    }, 200)
+    }, 300)
 
     return () => clearTimeout(timer)
   }, [search])
