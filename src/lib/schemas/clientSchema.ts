@@ -7,6 +7,7 @@ export const clientSchema = z.object({
     .string()
     .min(10, "Phone number must be at least 10 digits"),
   company: z.string().min(2, "Company name is required"),
+  address: z.string().min(2, "Address is required"),
   status: z.enum(["active", "inactive"]),
 })
 

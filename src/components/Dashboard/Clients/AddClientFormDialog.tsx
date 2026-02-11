@@ -29,6 +29,7 @@ import {
 import { clientSchema, type ClientFormValues } from "@/lib/schemas/clientSchema"
 import { X } from "lucide-react"
 import useModal from "@/components/Modal/useModal"
+import { clientService } from "@/services/clientService"
 
 export function AddClientFormDialog() {
   const { close } = useModal()
@@ -39,6 +40,7 @@ export function AddClientFormDialog() {
       email: "",
       phone: "",
       company: "",
+      address: "",
       status: "active",
     },
   })
@@ -46,7 +48,8 @@ export function AddClientFormDialog() {
   async function onSubmit(values: ClientFormValues) {
     try {
       console.log(values)
-      // await createClient(values)
+      const res = await clientService.createClient(values)
+      console.log(res)
       toast.success("Client created successfully")
       form.reset()
       close(["modal"])
@@ -128,6 +131,21 @@ export function AddClientFormDialog() {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel>Company</FieldLabel>
+                  <Input {...field} aria-invalid={fieldState.invalid} />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+
+            {/* Address */}
+            <Controller
+              name="address"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel>Address</FieldLabel>
                   <Input {...field} aria-invalid={fieldState.invalid} />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
