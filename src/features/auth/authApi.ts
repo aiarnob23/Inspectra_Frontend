@@ -40,6 +40,7 @@ export const authApi = createApi({
         method: "POST",
         data: body,
       }),
+      transformResponse: (response: any) => response.data,
     }),
 
     // ----------------------------

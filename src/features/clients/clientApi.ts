@@ -61,6 +61,16 @@ export const clientApi = createApi({
       transformResponse: (res: any) => res.data,
       providesTags: ["Clients"],
     }),
+    //---------------------------------
+    //EXPORT CLIENTS
+    //---------------------------------
+    exportClientCSV:builder.mutation<Blob, void>({
+      query: () => ({
+        url: "/clients/export-csv",
+        method: "GET",
+        responseType: "blob",
+      }),
+    }),
 
     // --------------------------------
     // CREATE CLIENT
@@ -119,6 +129,7 @@ export const clientApi = createApi({
 export const {
   useGetClientsQuery,
   useGetClientByIdQuery,
+  useExportClientCSVMutation,
   useCreateClientMutation,
   useImportClientsCSVMutation,
   useUpdateClientMutation,

@@ -52,7 +52,6 @@ export default function LoginFormDialog() {
   async function onSubmit(values: LoginFormValues) {
     try {
       const res = await loginUser(values).unwrap()
-
       dispatch(setUser(res.user))
 
       toast.success("Login successful 🎉")

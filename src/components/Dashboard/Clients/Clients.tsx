@@ -82,7 +82,7 @@ export default function ClientsTable() {
           {/* Data */}
           {clients.map((client) => (
             <TableRow key={client.id}>
-              <TableCell className="font-medium">
+              <TableCell className="">
                 {client.name}
               </TableCell>
 

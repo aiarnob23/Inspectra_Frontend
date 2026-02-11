@@ -8,6 +8,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+//form url query
 export function formUrlQuery({ params, key, value }: UrlQueryParams) {
   const currentUrl = qs.parse(params);
   currentUrl[key] = value;
@@ -21,7 +22,7 @@ export function formUrlQuery({ params, key, value }: UrlQueryParams) {
   );
 }
 
-
+//remove keys from query
 export function removeKeysFromQuery({
   params,
   keysToRemove,
@@ -38,4 +39,20 @@ export function removeKeysFromQuery({
   },
     { skipNull: true }
   )
+}
+
+//download file 
+export function downloadFile(blob: Blob, filename: string) {
+  const url = window.URL.createObjectURL(blob)
+
+  const link = document.createElement("a")
+  link.href = url
+  link.download = filename
+  link.style.display = "none"
+
+  document.body.appendChild(link)
+  link.click()
+
+  document.body.removeChild(link)
+  window.URL.revokeObjectURL(url)
 }
