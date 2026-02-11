@@ -49,7 +49,7 @@ const data = {
     },
     {
       title: "Employees",
-      url: "#",
+      url: "/dashboard/employees",
       icon: IdCardLanyard,
     },
     {

@@ -6,6 +6,7 @@ import Home from "@/pages/Public/Home";
 import { createBrowserRouter } from "react-router";
 import ProtectedRoute from "./ProtectedRoute";
 import Assets from "@/pages/Dashboard/Assets";
+import Employees from "@/pages/Dashboard/Employees";
 
 
 
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
             {
                 path:"/dashboard/assets",
                 element:<Assets/>
+            },
+            {
+                path:"/dashboard/employees",
+                element:<Employees/>
             }
         ]
     },

@@ -7,6 +7,7 @@ import authFlowReducer from "@/features/auth/authFlowSlice"
 import { clientApi } from "@/features/clients/clientApi"
 import { authApi } from "@/features/auth/authApi"
 import { assetApi } from "@/features/asset/assetApi"
+import { employeeApi } from "@/features/employee/employeeApi"
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   [clientApi.reducerPath]: clientApi.reducer,
   [authApi.reducerPath]: authApi.reducer,
   [assetApi.reducerPath]:assetApi.reducer,
+  [employeeApi.reducerPath]:employeeApi.reducer,
 })
 
 const persistConfig = {
@@ -29,7 +31,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
-    }).concat(clientApi.middleware, authApi.middleware, assetApi.middleware),
+    }).concat(clientApi.middleware, authApi.middleware, assetApi.middleware, employeeApi.middleware),
 })
 
 export const persistor = persistStore(store)
