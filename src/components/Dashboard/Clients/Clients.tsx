@@ -14,32 +14,25 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { clientService, type Client } from "@/services/clientService"
 import { MoreHorizontalIcon } from "lucide-react"
-import { useEffect, useState } from "react"
+
+import {
+  useGetClientsQuery,
+  useDeleteClientMutation,
+} from "@/features/clients/clientApi"
 
 export default function ClientsTable() {
-  const [clients, setClients] = useState<Client[]>([])
-  const [loading, setLoading] = useState(true)
+  const { data: clients = [], isLoading, isError } = useGetClientsQuery()
+  const [deleteClient, { isLoading: isDeleting }] =
+    useDeleteClientMutation()
 
-  useEffect(() => {
-    const fetchClients = async () => {
-      try {
-        const res = await clientService.getClients()
-
-        // ⚠️ তোমার backend response অনুযায়ী adjust করো
-        // যদি res.data.data হয় তাহলে:
-        setClients(res.data)
-
-      } catch (error) {
-        console.error("Failed to fetch clients", error)
-      } finally {
-        setLoading(false)
-      }
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteClient(id).unwrap()
+    } catch (error) {
+      console.error("Delete failed", error)
     }
-
-    fetchClients()
-  }, [])
+  }
 
   return (
     <div>
@@ -52,12 +45,15 @@ export default function ClientsTable() {
             <TableHead>Phone</TableHead>
             <TableHead>Address</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead className="text-right">
+              Actions
+            </TableHead>
           </TableRow>
         </TableHeader>
 
         <TableBody>
-          {loading && (
+          {/* Loading */}
+          {isLoading && (
             <TableRow>
               <TableCell colSpan={7} className="text-center py-6">
                 Loading...
@@ -65,7 +61,17 @@ export default function ClientsTable() {
             </TableRow>
           )}
 
-          {!loading && clients.length === 0 && (
+          {/* Error */}
+          {isError && (
+            <TableRow>
+              <TableCell colSpan={7} className="text-center py-6 text-red-500">
+                Failed to load clients
+              </TableCell>
+            </TableRow>
+          )}
+
+          {/* Empty State */}
+          {!isLoading && clients.length === 0 && (
             <TableRow>
               <TableCell colSpan={7} className="text-center py-6">
                 No clients found
@@ -73,49 +79,41 @@ export default function ClientsTable() {
             </TableRow>
           )}
 
+          {/* Data */}
           {clients.map((client) => (
             <TableRow key={client.id}>
               <TableCell className="font-medium">
                 {client.name}
               </TableCell>
 
-              <TableCell>
-                {client.company ?? "-"}
-              </TableCell>
-
-              <TableCell>
-                {client.email}
-              </TableCell>
-
-              <TableCell>
-                {client.phone ?? "-"}
-              </TableCell>
-
-              <TableCell>
-                {client.address ?? "-"}
-              </TableCell>
-
-              <TableCell>
-                {client.status}
-              </TableCell>
+              <TableCell>{client.company ?? "-"}</TableCell>
+              <TableCell>{client.email}</TableCell>
+              <TableCell>{client.phone ?? "-"}</TableCell>
+              <TableCell>{client.address ?? "-"}</TableCell>
+              <TableCell>{client.status}</TableCell>
 
               <TableCell className="text-right">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="size-8">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="size-8"
+                    >
                       <MoreHorizontalIcon />
-                      <span className="sr-only">Open menu</span>
                     </Button>
                   </DropdownMenuTrigger>
 
                   <DropdownMenuContent align="end">
-                    <DropdownMenuItem>
-                      Edit
-                    </DropdownMenuItem>
+                    <DropdownMenuItem>Edit</DropdownMenuItem>
 
                     <DropdownMenuSeparator />
 
-                    <DropdownMenuItem variant="destructive">
+                    <DropdownMenuItem
+                      variant="destructive"
+                      onClick={() => handleDelete(client.id)}
+                      disabled={isDeleting}
+                    >
                       Delete
                     </DropdownMenuItem>
                   </DropdownMenuContent>

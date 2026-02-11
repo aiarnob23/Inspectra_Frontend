@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { X } from "lucide-react"
-import axios from "axios"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -24,8 +23,7 @@ import { Input } from "@/components/ui/input"
 import { PasswordInput } from "@/components/ui/password-input"
 
 import useModal from "@/components/Modal/useModal"
-import { authService } from "@/services/authService"
-import { getApiErrorMessage } from "@/lib/api-error"
+import { useLoginMutation } from "@/features/auth/authApi"
 
 import {
   loginSchema,
@@ -33,13 +31,15 @@ import {
 } from "@/lib/schemas/authSchema"
 
 import { useAppDispatch } from "@/store/hooks"
-import { setUser } from "@/store/slices/authSlice"
+import { setUser } from "@/features/auth/authSlice"
 import { useNavigate } from "react-router"
 
 export default function LoginFormDialog() {
   const { close } = useModal()
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
+  const [loginUser, { isLoading }] = useLoginMutation()
+
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -51,52 +51,32 @@ export default function LoginFormDialog() {
 
   async function onSubmit(values: LoginFormValues) {
     try {
-      const res = await authService.login(values)
+      const res = await loginUser(values).unwrap()
 
-      // set USER
-      dispatch(
-        setUser({
-          id: res.user.id,
-          email: res.user.email,
-          firstName: res.user.firstName ?? "",
-          lastName: res.user.lastName ?? "",
-          role: res.user.role,
-          status: res.user.status,
-        })
-      )
+      dispatch(setUser(res.user))
 
       toast.success("Login successful 🎉")
       form.reset()
       close(["modal"])
       navigate("/dashboard/overview", { replace: true })
 
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const status = error.response?.status
-        const message = getApiErrorMessage(error)
+    } catch (error: any) {
+      const status = error?.status
 
-        // Invalid credentials
-        if (status === 401) {
-          toast.error("Invalid email or password")
-          return
-        }
-
-        // Email not verified
-        if (status === 403 && error.response?.data?.requiresVerification) {
-          toast.error("Please verify your email first")
-          return
-        }
-
-        // Validation error
-        if (status === 400) {
-          toast.error(message)
-          return
-        }
+      if (status === 401) {
+        toast.error("Invalid credentials")
+        return
       }
 
-      toast.error("Something went wrong. Please try again.")
+      if (status === 403) {
+        toast.error("Please verify your email first")
+        return
+      }
+
+      toast.error("Something went wrong")
     }
   }
+
 
   return (
     <Card className="w-full max-w-md bg-background">

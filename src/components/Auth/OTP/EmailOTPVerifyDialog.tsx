@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { X } from "lucide-react"
-import axios from "axios"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -30,18 +29,18 @@ import {
 import { REGEXP_ONLY_DIGITS } from "input-otp"
 
 import useModal from "@/components/Modal/useModal"
-import { authService } from "@/services/authService"
-import { getApiErrorMessage } from "@/lib/api-error"
+import { useVerifyEmailMutation } from "@/features/auth/authApi"
 import { otpSchema, type OTPFormValues } from "@/lib/schemas/authSchema"
 import { useAppSelector } from "@/store/hooks"
 import { useDispatch } from "react-redux"
-import { setUser } from "@/store/slices/authSlice"
+import { setUser } from "@/features/auth/authSlice"
 import { useNavigate } from "react-router"
 
 export default function OTPVerifyDialog() {
   const { close } = useModal()
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const [verifyEmail] = useVerifyEmailMutation()
 
   const email = useAppSelector((s) => s.authFlow.pendingEmail);
 
@@ -55,46 +54,33 @@ export default function OTPVerifyDialog() {
    */
   async function onSubmit(values: OTPFormValues) {
     if (!email) {
-      toast.error("Email not found. Please register again.")
+      toast.error("Email not found")
       return
     }
 
     try {
-      // Verify OTP with backend
-
-      const res = await authService.verifyEmail({
+      const res = await verifyEmail({
         email,
         code: values.code,
-      })
-      //Set USER
-      dispatch(
-        setUser({
-          id: res.user.id,
-          email: res.user.email,
-          firstName: res.user.firstName ?? "",
-          lastName: res.user.lastName ?? "",
-          role: res.user.role,
-          status: res.user.status
-        })
-      )
-      toast.success("Email verified successfully 🎉")
+      }).unwrap()
+
+      dispatch(setUser(res.user))
+
+      toast.success("Email verified 🎉")
       form.reset()
       close(["modal"])
       navigate("/dashboard/overview", { replace: true })
-    } catch (error) {
-      const message = getApiErrorMessage(error)
 
-      if (axios.isAxiosError(error)) {
-        if (error.response?.status === 400) {
-          form.setError("code", {
-            type: "manual",
-            message,
-          })
-          return
-        }
+    } catch (error: any) {
+      if (error?.status === 400) {
+        form.setError("code", {
+          type: "manual",
+          message: "Invalid OTP",
+        })
+        return
       }
 
-      toast.error(message)
+      toast.error("Verification failed")
     }
   }
 

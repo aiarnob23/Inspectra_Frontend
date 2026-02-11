@@ -27,17 +27,16 @@ import {
   type RegisterFormValues,
 } from "@/lib/schemas/authSchema";
 import { PasswordInput } from "@/components/ui/password-input"
-import { authService } from "@/services/authService"
-import axios from "axios"
-import { getApiErrorMessage } from "@/lib/api-error"
+import { useRegisterMutation } from "@/features/auth/authApi"
 import { useAppDispatch } from "@/store/hooks"
-import { setPendingEmail } from "@/store/slices/authFlowSlice"
+import { setPendingEmail } from "@/features/auth/authFlowSlice"
 import { useNavigate } from "react-router"
 
 export default function RegisterFormDialog() {
   const { close } = useModal()
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [registerUser, { isLoading }] = useRegisterMutation();
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
@@ -52,53 +51,38 @@ export default function RegisterFormDialog() {
   })
 
   async function onSubmit(values: RegisterFormValues) {
-    try {
-      console.log(values)
-      const res = await authService.register({
-        email: values.email,
-        password: values.password,
-        confirmPassword: values.confirmPassword,
-        firstName: values.firstName,
-        lastName: values.lastName,
-        phoneNumber: values.phone
-      })
+  try {
+    await registerUser({
+      email: values.email,
+      password: values.password,
+      confirmPassword: values.confirmPassword,
+      firstName: values.firstName,
+      lastName: values.lastName,
+      phoneNumber: values.phone,
+    }).unwrap()
 
-      if(res?.success){
-        toast.success("Account created successfully")
-        dispatch(setPendingEmail(values.email))
-        form.reset()
-        close(["modal"])
-        navigate("/?modal=verify-otp" , {replace:true})
-      }
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.log(error.response)
-        console.log(error.response?.status)
-        const status = error.response?.status
-        const message = getApiErrorMessage(error)
+    toast.success("Account created successfully")
+    dispatch(setPendingEmail(values.email))
+    form.reset()
+    close(["modal"])
+    navigate("/?modal=verify-otp", { replace: true })
+  } catch (error: any) {
+    const status = error?.status
 
-        // Business conflict (user already exists)
-        if (status === 409) {
-          toast.error("Conflict! User already exists")
-          return;
-        }
-
-        // Validation error
-        if (status === 400) {
-          toast.error(message || "Invalid input")
-          return;
-        }
-
-        // Unauthorized / forbidden
-        if (status === 401 || status === 403) {
-          toast.error("You are not authorized")
-          return;
-        }
-      }
-      // Fallback (unexpected error)
-      toast.error("Something went wrong. Please try again.")
+    if (status === 409) {
+      toast.error("User already exists")
+      return
     }
+
+    if (status === 400) {
+      toast.error("Invalid input")
+      return
+    }
+
+    toast.error("Something went wrong")
   }
+}
+
 
   return (
     <Card className="w-full max-w-lg bg-background">

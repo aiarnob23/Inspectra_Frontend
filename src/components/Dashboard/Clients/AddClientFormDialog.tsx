@@ -29,10 +29,12 @@ import {
 import { clientSchema, type ClientFormValues } from "@/lib/schemas/clientSchema"
 import { X } from "lucide-react"
 import useModal from "@/components/Modal/useModal"
-import { clientService } from "@/services/clientService"
+import { useCreateClientMutation } from "@/features/clients/clientApi"
+
 
 export function AddClientFormDialog() {
   const { close } = useModal()
+  const [createClient, { isLoading }] = useCreateClientMutation()
   const form = useForm<ClientFormValues>({
     resolver: zodResolver(clientSchema),
     defaultValues: {
@@ -47,18 +49,17 @@ export function AddClientFormDialog() {
 
   async function onSubmit(values: ClientFormValues) {
     try {
-      console.log(values)
-      const res = await clientService.createClient(values)
-      console.log(res)
+      await createClient(values).unwrap()
+
       toast.success("Client created successfully")
       form.reset()
       close(["modal"])
-    } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Something went wrong"
-      )
+
+    } catch (error: any) {
+      toast.error("Failed to create client")
     }
   }
+
 
   return (
     <Card className="max-w-lg">
