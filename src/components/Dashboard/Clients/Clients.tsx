@@ -22,7 +22,11 @@ import {
 } from "@/features/clients/clientApi"
 
 export default function ClientsTable() {
-  const { data: clients = [], isLoading, isError } = useGetClientsQuery()
+  const { data, isLoading, isError } = useGetClientsQuery({
+    page: 1,
+    limit: 100
+  })
+  const clients = data?.data ?? []
   const [deleteClient, { isLoading: isDeleting }] =
     useDeleteClientMutation()
 

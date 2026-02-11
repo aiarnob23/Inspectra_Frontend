@@ -27,9 +27,20 @@ export interface CreateClientPayload {
   status?: "active" | "inactive"
 }
 
-export interface PaginationQuery {
+export interface ClientListQuery {
   page?: number
   limit?: number
+  search?: string
+}
+
+export interface PaginatedClientsResponse {
+  data: Client[]
+  meta: {
+    page: number
+    limit: number
+    total: number
+    totalPage: number
+  }
 }
 
 export const clientApi = createApi({
@@ -40,13 +51,15 @@ export const clientApi = createApi({
     // --------------------------------
     // GET ALL CLIENTS
     // --------------------------------
-    getClients: builder.query<Client[], PaginationQuery | void>({
+    getClients: builder.query<
+      PaginatedClientsResponse,
+      ClientListQuery
+    >({
       query: (params) => ({
         url: "/clients",
         method: "GET",
         params,
       }),
-      transformResponse: (res: any) => res.data,
       providesTags: ["Clients"],
     }),
 
@@ -64,7 +77,7 @@ export const clientApi = createApi({
     //---------------------------------
     //EXPORT CLIENTS
     //---------------------------------
-    exportClientCSV:builder.mutation<Blob, void>({
+    exportClientCSV: builder.mutation<Blob, void>({
       query: () => ({
         url: "/clients/export-csv",
         method: "GET",

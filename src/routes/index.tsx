@@ -5,6 +5,7 @@ import NotFound from "@/pages/NotFoundPage";
 import Home from "@/pages/Public/Home";
 import { createBrowserRouter } from "react-router";
 import ProtectedRoute from "./ProtectedRoute";
+import Assets from "@/pages/Dashboard/Assets";
 
 
 
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
             {
                 path: "/dashboard/clients",
                 element: <Clients />,
+            },
+            {
+                path:"/dashboard/assets",
+                element:<Assets/>
             }
         ]
     },

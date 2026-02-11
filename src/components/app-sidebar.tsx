@@ -44,7 +44,7 @@ const data = {
     },
     {
       title: "Assets",
-      url: "#",
+      url: "/dashboard/assets",
       icon: CableCar,
     },
     {
