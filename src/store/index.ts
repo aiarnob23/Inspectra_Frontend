@@ -8,20 +8,22 @@ import { clientApi } from "@/features/clients/clientApi"
 import { authApi } from "@/features/auth/authApi"
 import { assetApi } from "@/features/asset/assetApi"
 import { employeeApi } from "@/features/employee/employeeApi"
+import { inspectionApi } from "@/features/inspection/inspectionApi"
 
 const rootReducer = combineReducers({
   auth: authReducer,
   authFlow: authFlowReducer,
   [clientApi.reducerPath]: clientApi.reducer,
   [authApi.reducerPath]: authApi.reducer,
-  [assetApi.reducerPath]:assetApi.reducer,
-  [employeeApi.reducerPath]:employeeApi.reducer,
+  [assetApi.reducerPath]: assetApi.reducer,
+  [employeeApi.reducerPath]: employeeApi.reducer,
+  [inspectionApi.reducerPath]: inspectionApi.reducer,
 })
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["auth"], 
+  whitelist: ["auth"],
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
@@ -31,7 +33,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
-    }).concat(clientApi.middleware, authApi.middleware, assetApi.middleware, employeeApi.middleware),
+    }).concat(clientApi.middleware, authApi.middleware, assetApi.middleware, employeeApi.middleware, inspectionApi.middleware),
 })
 
 export const persistor = persistStore(store)

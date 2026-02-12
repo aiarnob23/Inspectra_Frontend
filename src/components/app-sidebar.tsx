@@ -54,7 +54,7 @@ const data = {
     },
     {
       title: "Inspections",
-      url: "#",
+      url: "/dashboard/inspections",
       icon: ShieldCheck,
     },
     {

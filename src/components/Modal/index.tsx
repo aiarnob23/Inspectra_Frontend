@@ -5,6 +5,7 @@ import RegisterFormDialog from "../Auth/Register/RegisterFormDialog";
 import { AddAssetFormDialog } from "../Dashboard/Asset/AddAssetFormDialog";
 import { AddClientFormDialog } from "../Dashboard/Clients/AddClientFormDialog";
 import { AddEmployeeFormDialog } from "../Dashboard/Employee/AddEmployeeFormDialog";
+import { AddInspectionFormDialog } from "../Dashboard/Inspection/AddInspectionFormDialog";
 import Modal from "./modal";
 
 
@@ -56,6 +57,14 @@ export default function Modals() {
                 className="sm:w-[45dvw]"
             >
                 <AddEmployeeFormDialog />
+            </Modal>
+            <Modal
+                modalId="modal"
+                openId="add-inspection"
+                closeModals={["tab"]}
+                className="sm:w-[45dvw]"
+            >
+                <AddInspectionFormDialog />
             </Modal>
         </>
     )

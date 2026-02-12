@@ -7,6 +7,7 @@ import { createBrowserRouter } from "react-router";
 import ProtectedRoute from "./ProtectedRoute";
 import Assets from "@/pages/Dashboard/Assets";
 import Employees from "@/pages/Dashboard/Employees";
+import Inspections from "@/pages/Dashboard/Inspections";
 
 
 
@@ -39,7 +40,12 @@ const router = createBrowserRouter([
             {
                 path:"/dashboard/employees",
                 element:<Employees/>
-            }
+            },
+            {
+                path:"/dashboard/inspections",
+                element:<Inspections/>
+            },
+            
         ]
     },
     {
