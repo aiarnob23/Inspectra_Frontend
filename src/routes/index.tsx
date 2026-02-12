@@ -8,6 +8,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import Assets from "@/pages/Dashboard/Assets";
 import Employees from "@/pages/Dashboard/Employees";
 import Inspections from "@/pages/Dashboard/Inspections";
+import RemindersPage from "@/pages/Dashboard/Reminders";
 
 
 
@@ -27,25 +28,29 @@ const router = createBrowserRouter([
     },
     {
         path: "/dashboard",
-        element: <ProtectedRoute><DashboardLayout/></ProtectedRoute>,
+        element: <ProtectedRoute><DashboardLayout /></ProtectedRoute>,
         children: [
             {
                 path: "/dashboard/clients",
                 element: <Clients />,
             },
             {
-                path:"/dashboard/assets",
-                element:<Assets/>
+                path: "/dashboard/assets",
+                element: <Assets />
             },
             {
-                path:"/dashboard/employees",
-                element:<Employees/>
+                path: "/dashboard/employees",
+                element: <Employees />
             },
             {
-                path:"/dashboard/inspections",
-                element:<Inspections/>
+                path: "/dashboard/inspections",
+                element: <Inspections />
             },
-            
+            {
+                path: "/dashboard/reminders",
+                element: <RemindersPage />
+            },
+
         ]
     },
     {

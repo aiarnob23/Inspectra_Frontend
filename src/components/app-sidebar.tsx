@@ -59,7 +59,7 @@ const data = {
     },
     {
       title: "Reminders",
-      url: "#",
+      url: "/dashboard/reminders",
       icon: Send,
     },
     {

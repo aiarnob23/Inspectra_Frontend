@@ -9,6 +9,7 @@ import { authApi } from "@/features/auth/authApi"
 import { assetApi } from "@/features/asset/assetApi"
 import { employeeApi } from "@/features/employee/employeeApi"
 import { inspectionApi } from "@/features/inspection/inspectionApi"
+import { reminderApi } from "@/features/reminder/reminderApi"
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   [assetApi.reducerPath]: assetApi.reducer,
   [employeeApi.reducerPath]: employeeApi.reducer,
   [inspectionApi.reducerPath]: inspectionApi.reducer,
+  [reminderApi.reducerPath]: reminderApi.reducer,
 })
 
 const persistConfig = {
@@ -33,7 +35,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
-    }).concat(clientApi.middleware, authApi.middleware, assetApi.middleware, employeeApi.middleware, inspectionApi.middleware),
+    }).concat(clientApi.middleware, authApi.middleware, assetApi.middleware, employeeApi.middleware, inspectionApi.middleware, reminderApi.middleware),
 })
 
 export const persistor = persistStore(store)
