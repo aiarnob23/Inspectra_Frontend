@@ -9,6 +9,7 @@ import Assets from "@/pages/Dashboard/Assets";
 import Employees from "@/pages/Dashboard/Employees";
 import Inspections from "@/pages/Dashboard/Inspections";
 import RemindersPage from "@/pages/Dashboard/Reminders";
+import Billing from "@/pages/Dashboard/Billing";
 
 
 
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
             {
                 path: "/dashboard/reminders",
                 element: <RemindersPage />
+            },
+            {
+                path: "/dashboard/billing",
+                element: <Billing />
             },
 
         ]

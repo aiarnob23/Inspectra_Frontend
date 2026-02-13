@@ -69,7 +69,7 @@ const data = {
     },
     {
       title: "Billing",
-      url: "#",
+      url: "/dashboard/billing",
       icon: CreditCard,
     },
     {
