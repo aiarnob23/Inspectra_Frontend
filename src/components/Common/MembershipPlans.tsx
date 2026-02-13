@@ -108,7 +108,7 @@ function MembershipPlans() {
     }))
 
     return (
-        <div className="rounded-lg">
+        <div className="rounded-lg" id="pricing-plans">
             <Pricing
                 plans={plansWithAction}
                 title="Simple, Transparent Pricing"

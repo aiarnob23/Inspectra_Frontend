@@ -1,10 +1,10 @@
 import {
-  BadgeCheck,
-  Bell,
   ChevronsUpDown,
-  CreditCard,
+  HardDrive,
   LogOut,
-  Sparkles,
+  Moon,
+  Sun,
+  User,
 } from "lucide-react"
 
 import {
@@ -27,6 +27,9 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import { Button } from "./ui/button"
+import { useLogout } from "@/hooks/useLogout"
+import { useTheme } from "@/theme/theme-provider"
 
 export function NavUser({
   user,
@@ -38,6 +41,8 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
+  const logout = useLogout()
+  const {setTheme} = useTheme()
 
   return (
     <SidebarMenu>
@@ -50,7 +55,7 @@ export function NavUser({
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                <AvatarFallback className="rounded-lg"><User /></AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{user.name}</span>
@@ -69,7 +74,7 @@ export function NavUser({
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  <AvatarFallback className="rounded-lg"><User /></AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{user.name}</span>
@@ -77,32 +82,24 @@ export function NavUser({
                 </div>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
+              <DropdownMenuItem onClick={() => setTheme("light")}>
+                <Sun/> Light Mode
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
+              <DropdownMenuItem onClick={() => setTheme("dark")}>
+                <Moon/> Dark Mode
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
+              <DropdownMenuItem onClick={() => setTheme("system")}>
+                <HardDrive/> System
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <LogOut />
-              Log out
+              <Button className="w-full text-foreground" onClick={logout}><LogOut />
+                Log out</Button>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
