@@ -56,6 +56,104 @@ export const authApi = createApi({
         data: body,
       }),
     }),
+    // ----------------------------
+    // RESEND EMAIL VERIFICATION
+    // ----------------------------
+    resendEmailVerification: builder.mutation<
+      { message: string },
+      { email: string }
+    >({
+      query: (body) => ({
+        url: "/auth/resnd-email-verification",
+        method: "POST",
+        data: body,
+      })
+    }),
+    // ----------------------------
+    // FORGOT PASSWORD (email <-send OTP)
+    // ----------------------------
+    forgotPassword: builder.mutation<
+      { message: string },
+      { email: string }
+    >({
+      query: (body) => ({
+        url: "/auth/forgot-password",
+        method: "POST",
+        data: body,
+      })
+    }),
+
+    // ----------------------------
+    // VERIFY RESET PASSWORD OTP (verify OTP -> server)
+    // ----------------------------
+    verifyResetPasswordOTP: builder.mutation<
+      { message: string },
+      { email: string; code: string }
+    >({
+      query: (body) => ({
+        url: "/auth/verify-reset-password-OTP",
+        method: "POST",
+        data: body,
+      })
+    }),
+
+    // ----------------------------
+    // RESET PASSWORD
+    // ----------------------------
+    resetPassword: builder.mutation<
+      { message: string },
+      { email: string; newPassword: string }
+    >({
+      query: (body) => ({
+        url: "/auth/reset-password",
+        method: "POST",
+        data: body,
+      })
+    }),
+
+    // ----------------------------
+    // CHANGE PASSWORD (logged in)
+    // ----------------------------
+    changePassword: builder.mutation<
+      { message: string },
+      { currentPassword: string; newPassword: string }
+    >({
+      query: (body) => ({
+        url: "/auth/change-password",
+        method: "POST",
+        data: body,
+      }),
+      invalidatesTags: ["Auth"],
+    }),
+
+
+    // ----------------------------
+    // REFRESH TOKEN
+    // ----------------------------
+    refreshToken: builder.mutation<
+      { user: AuthUser; token: string; expiresIn: number },
+      { token: string }
+    >({
+      query: (body) => ({
+        url: "/auth/refresh",
+        method: "POST",
+        data: body,
+      }),
+    }),
+
+    // ----------------------------
+    // VERIFY TOKEN
+    // ----------------------------
+    verifyToken: builder.mutation<
+      { userId: string; email: string; role: string },
+      void
+    >({
+      query: (body) => ({
+        url: "/auth/verify",
+        method: "POST",
+        data: body,
+      }),
+    }),
 
     // ----------------------------
     // LOGOUT
@@ -73,6 +171,13 @@ export const {
   useGetProfileQuery,
   useRegisterMutation,
   useLoginMutation,
+  useResendEmailVerificationMutation,
+  useForgotPasswordMutation,
+  useVerifyResetPasswordOTPMutation,
+  useResetPasswordMutation,
+  useChangePasswordMutation,
+  useRefreshTokenMutation,
+  useVerifyTokenMutation,
   useVerifyEmailMutation,
   useLogoutMutation,
 } = authApi

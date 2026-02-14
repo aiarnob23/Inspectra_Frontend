@@ -33,6 +33,7 @@ import {
 import { useAppDispatch } from "@/store/hooks"
 import { setUser } from "@/features/auth/authSlice"
 import { useNavigate } from "react-router"
+import OpenModal from "@/components/Modal/openModal"
 
 export default function LoginFormDialog() {
   const { close } = useModal()
@@ -131,18 +132,31 @@ export default function LoginFormDialog() {
         </form>
       </CardContent>
 
-      <CardFooter className="flex justify-end gap-2">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => form.reset()}
-        >
-          Reset
-        </Button>
+      <CardFooter className="flex justify-between items-center">
 
-        <Button type="submit" form="login-form">
-          Login
-        </Button>
+        <OpenModal
+          modals={[
+            { modalId: "modal", openId: "forgot-password" }
+          ]}
+        >
+          <Button variant={'secondary'} className="text-sm border-2 px-2 py-1 rounded-lg text-muted-foreground">
+            Forgot Password
+          </Button>
+        </OpenModal>
+
+        <div className="flex gap-2 justify-end">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => form.reset()}
+          >
+            Reset
+          </Button>
+
+          <Button type="submit" form="login-form">
+            Login
+          </Button>
+        </div>
       </CardFooter>
     </Card>
   )
