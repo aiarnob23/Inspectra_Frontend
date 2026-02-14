@@ -28,6 +28,38 @@ const Navbar = () => {
 
     const toggleMenu = () => setIsMenuOpen((prev) => !prev)
 
+    const handleHover = (el: HTMLAnchorElement) => {
+        const underline = el.querySelector(".underline")
+
+        gsap.to(el, {
+            y: -3,
+            duration: 0.25,
+            ease: "power2.out",
+        })
+
+        gsap.to(underline, {
+            width: "100%",
+            duration: 0.25,
+            ease: "power2.out",
+        })
+    }
+
+    const handleLeave = (el: HTMLAnchorElement) => {
+        const underline = el.querySelector(".underline")
+
+        gsap.to(el, {
+            y: 0,
+            duration: 0.25,
+            ease: "power2.out",
+        })
+
+        gsap.to(underline, {
+            width: "0%",
+            duration: 0.25,
+            ease: "power2.out",
+        })
+    }
+
     useGSAP(
         () => {
             const ctx = gsap.context(() => {
@@ -71,13 +103,22 @@ const Navbar = () => {
                     <div className="flex justify-between items-center h-16">
 
                         {/* Logo */}
-                        <span className="text-xl font-semibold">Inspectra</span>
+                        <span className="text-2xl text-gray-200 font-bold">Inspectra</span>
 
                         {/* Desktop Links */}
-                        <div className="hidden lg:flex items-center gap-6">
+                        <div className="hidden lg:flex items-center gap-12">
                             {navLinks.map((link) => (
-                                <a key={link.name} href={link.path}>
+                                <a
+                                    key={link.name}
+                                    href={link.path}
+                                    onMouseEnter={(e) => handleHover(e.currentTarget)}
+                                    onMouseLeave={(e) => handleLeave(e.currentTarget)}
+                                    className="relative text-gray-200 font-semibold text-lg"
+                                >
                                     {link.name}
+
+                                    {/* Theme aware underline */}
+                                    <span className="underline absolute left-0 -bottom-1 h-0.5 w-0 bg-primary" />
                                 </a>
                             ))}
                         </div>
@@ -110,13 +151,13 @@ const Navbar = () => {
                                     <OpenModal
                                         modals={[{ modalId: "modal", openId: "login-user" }]}
                                     >
-                                        <Button variant="outline">Login</Button>
+                                        <Button variant="outline" className="cursor-pointer textgr">Login</Button>
                                     </OpenModal>
 
                                     <OpenModal
                                         modals={[{ modalId: "modal", openId: "register-user" }]}
                                     >
-                                        <Button>Sign Up</Button>
+                                        <Button className="text-gray-100 cursor-pointer">Sign Up</Button>
                                     </OpenModal>
                                 </>
                             )}

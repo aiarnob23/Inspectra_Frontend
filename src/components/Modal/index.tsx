@@ -3,6 +3,7 @@ import ForgotPasswordDialog from "../Auth/ForgotPassword/ForgotPasswordDialog";
 import LoginFormDialog from "../Auth/Login/LoginFormDialog";
 import OTPInputDigalog from "../Auth/OTP/EmailOTPVerifyDialog";
 import RegisterFormDialog from "../Auth/Register/RegisterFormDialog";
+import ResetPasswordDialog from "../Auth/ResetPassword/ResetPasswordDialog";
 import VerifyResetOTPPage from "../Auth/VerifyResetPassOTP/VerifyResetPassOTPDialog";
 import { AddAssetFormDialog } from "../Dashboard/Asset/AddAssetFormDialog";
 import { AddClientFormDialog } from "../Dashboard/Clients/AddClientFormDialog";
@@ -59,6 +60,14 @@ export default function Modals() {
                 className="sm:w-[45dvw]"
             >
                 <VerifyResetOTPPage />
+            </Modal>
+               <Modal
+                modalId="modal"
+                openId="reset-password"
+                closeModals={["tab"]}
+                className="sm:w-[45dvw]"
+            >
+                <ResetPasswordDialog />
             </Modal>
             <Modal
                 modalId="modal"
