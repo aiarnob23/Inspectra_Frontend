@@ -5,10 +5,11 @@ import { Menu, X } from "lucide-react"
 import gsap from "gsap"
 import { useGSAP } from "@gsap/react"
 import { Button } from "@/components/ui/button"
-import { ModeToggle } from "@/components/ui/theme/mode-toggle"
 import OpenModal from "@/components/Modal/openModal"
 import { useAuth } from "@/hooks/useAuth"
 import { useLogout } from "@/hooks/useLogout"
+import { ThemeTogglerButton } from "@/components/animate-ui/components/buttons/theme-toggler"
+
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const { user } = useAuth()
@@ -162,7 +163,12 @@ const Navbar = () => {
                                 </>
                             )}
 
-                            <ModeToggle />
+                            <ThemeTogglerButton
+                                variant="outline"
+                                size="sm"
+                                direction="ltr"
+                                modes={["light", "dark", "system"]}
+                            />
                         </div>
 
                         {/* Mobile Button */}
