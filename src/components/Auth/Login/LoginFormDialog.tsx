@@ -154,7 +154,7 @@ export default function LoginFormDialog() {
           </Button>
 
           <Button type="submit" form="login-form">
-            Login
+            {isLoading ? "Please wait..." : "Login"}
           </Button>
         </div>
       </CardFooter>
